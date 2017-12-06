@@ -2,6 +2,8 @@
 
 cd "$(dirname "$0")" || exit
 FILE_NAME="index.html"
+DATE=$(date +"%d%m%Y")
+
 function push_staging {
     echo "pusing to staging"
     git pull 
@@ -27,9 +29,9 @@ function push_prod {
     mv "./playables/staging/ios/${GAME_FOLDER_NAME}/${FILE_NAME}" "./playables/production/ios/${GAME_FOLDER_NAME}/${FILE_NAME}"
     mv "./playables/staging/android/${GAME_FOLDER_NAME}/${FILE_NAME}" "./playables/production/android/${GAME_FOLDER_NAME}/${FILE_NAME}"
 
-    #git add .
-    #git commit -m "add to prod: ${GAME_FOLDER_NAME}"
-    #git push
+    git add .
+    git commit -m "add to prod: ${GAME_FOLDER_NAME}"
+    git push
 
 }
 
@@ -37,7 +39,7 @@ while getopts ":e:i:g:" OPTIONS; do
     case ${OPTIONS} in
         e) DES_ENV=$OPTARG ;;
         i) INPUT_HTML=$OPTARG ;;
-        g) GAME_FOLDER_NAME=$OPTARG ;;
+        g) GAME_NAME=$OPTARG ;;
         :) echo "Missing required argument for -$OPTARG" >&2 ; exit 1;;
     esac
 done
@@ -46,7 +48,11 @@ echo ${INPUT_HTML}
 
 if [ -z "${DES_ENV}" ]; then echo "Please specify destination environment" ;  exit 1 ; fi
 if [ -z "${INPUT_HTML}" ]; then echo "Please specify html file" ;  exit 1 ; fi
-if [ -z "${GAME_FOLDER_NAME}" ]; then echo "Please specify game name" ;  exit 1 ; fi
+if [ -z "${GAME_NAME}" ]; then echo "Please specify game name" ;  exit 1 ; fi
+
+
+GAME_FOLDER_NAME=${GAME_NAME}-${DATE}
+echo ${GAME_FOLDER_NAME}
 
 if [ "${DES_ENV}" == "staging" ]; then push_staging ; fi
 if [ "${DES_ENV}" == "prod" ] || [ "${DES_ENV}" == "production" ]; then push_prod ; fi
