@@ -4,8 +4,18 @@ cd "$(dirname "$0")" || exit
 FILE_NAME="index.html"
 DATE=$(date +"%d%m%Y")
 
+function usage(){
+    echo -e "usage:\n   $0 OPTIONS"
+    echo -e "Test run OPTIONS:"
+    echo -e "\t -e\tEnvironment to push: staging or prod"
+    echo -e "\t -i\tInput html file for playable ads"
+    echo -e "\t -g\tPlayable Ads Game Name"
+    echo -e "Example:"
+    echo -e "\t$0 -e staging -i examplePlayable.html -g testingGame"
+}
+
 function push_staging {
-    echo "pusing to staging"
+    echo "pushing to staging"
     git pull 
 
     mkdir -p "./playables/staging/ios/${GAME_FOLDER_NAME}" 
@@ -35,6 +45,8 @@ function push_prod {
 
 }
 
+if [ $# -eq 0 ]; then echo "No arguments supplied" ; usage ; exit 1 ; fi
+
 while getopts ":e:i:g:" OPTIONS; do
     case ${OPTIONS} in
         e) DES_ENV=$OPTARG ;;
@@ -43,19 +55,21 @@ while getopts ":e:i:g:" OPTIONS; do
         :) echo "Missing required argument for -$OPTARG" >&2 ; exit 1;;
     esac
 done
-echo ${DES_ENV}
-echo ${INPUT_HTML}
 
-if [ -z "${DES_ENV}" ]; then echo "Please specify destination environment" ;  exit 1 ; fi
-if [ -z "${INPUT_HTML}" ]; then echo "Please specify html file" ;  exit 1 ; fi
-if [ -z "${GAME_NAME}" ]; then echo "Please specify game name" ;  exit 1 ; fi
+if [ -z "${DES_ENV}" ]; then echo "Please specify destination environment" ; usage ; exit 1 ; fi
+if [ -z "${INPUT_HTML}" ]; then echo "Please specify html file" ; usage ; exit 1 ; fi
+if [ -z "${GAME_NAME}" ]; then echo "Please specify game name" ;  usage ; exit 1 ; fi
 
 
 GAME_FOLDER_NAME=${GAME_NAME}-${DATE}
-echo ${GAME_FOLDER_NAME}
 
-if [ "${DES_ENV}" == "staging" ]; then push_staging ; fi
-if [ "${DES_ENV}" == "prod" ] || [ "${DES_ENV}" == "production" ]; then push_prod ; fi
+if [ "${DES_ENV}" == "staging" ]; then 
+    push_staging 
+elif [ "${DES_ENV}" == "prod" ] || [ "${DES_ENV}" == "production" ]; then 
+    push_prod 
+else
+    echo "not supported environment"; usage ; exit 1
+fi    
 
 
 
