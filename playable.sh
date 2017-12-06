@@ -27,9 +27,9 @@ function push_prod {
     mv "./playables/staging/ios/${GAME_FOLDER_NAME}/${FILE_NAME}" "./playables/production/ios/${GAME_FOLDER_NAME}/${FILE_NAME}"
     mv "./playables/staging/android/${GAME_FOLDER_NAME}/${FILE_NAME}" "./playables/production/android/${GAME_FOLDER_NAME}/${FILE_NAME}"
 
-    git add .
-    git commit -m "add to prod: ${GAME_FOLDER_NAME}"
-    git push
+    #git add .
+    #git commit -m "add to prod: ${GAME_FOLDER_NAME}"
+    #git push
 
 }
 
