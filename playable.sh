@@ -4,7 +4,7 @@ cd "$(dirname "$0")" || exit
 FILE_NAME="index.html"
 function push_staging {
     echo "pusing to staging"
-    #git pull 
+    git pull 
 
     mkdir -p "./playables/staging/ios/${GAME_FOLDER_NAME}" 
     mkdir -p "./playables/staging/android/${GAME_FOLDER_NAME}"
@@ -12,9 +12,11 @@ function push_staging {
     cp ${INPUT_HTML} "./playables/staging/ios/${GAME_FOLDER_NAME}/${FILE_NAME}"
     cp ${INPUT_HTML} "./playables/staging/android/${GAME_FOLDER_NAME}/${FILE_NAME}"
 
-    #git add .
-    #git commit -m "add to staging: ${GAME_FOLDER_NAME}"
-    #git push
+    rm ${FILE_NAME}
+
+    git add .
+    git commit -m "add to staging: ${GAME_FOLDER_NAME}"
+    git push
     
 }
 function push_prod {
