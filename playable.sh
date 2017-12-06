@@ -14,7 +14,7 @@ function push_staging {
     cp ${INPUT_HTML} "./playables/staging/ios/${GAME_FOLDER_NAME}/${FILE_NAME}"
     cp ${INPUT_HTML} "./playables/staging/android/${GAME_FOLDER_NAME}/${FILE_NAME}"
 
-    rm ${FILE_NAME}
+    rm ${INPUT_HTML}
 
     git add .
     git commit -m "add to staging: ${GAME_FOLDER_NAME}"
